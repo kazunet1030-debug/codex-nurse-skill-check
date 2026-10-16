@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="theme-color" content="#eaf0f7">
+  <title>看護師のCodex活用力｜1分無料診断</title>
+  <meta name="description" content="5問・約1分で、看護師のCodex活用力と次に伸ばすポイントがわかる無料診断です。登録不要。">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <button class="icon-button" id="backButton" type="button" aria-label="前の画面へ戻る">←</button>
+      <a class="brand" href="#" id="homeLink" aria-label="最初の画面へ戻る">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <span>AI CONSULTING <small>非公式・OpenAI非提携</small></span>
+      </a>
+      <span class="step-count" id="stepCount">START</span>
+    </header>
+    <div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
+
+    <section class="screen" id="screen" aria-live="polite" aria-atomic="true"></section>
+  </main>
+
+  <template id="startTemplate">
+    <div class="start-view">
+      <div class="eyebrow">CODEX × NURSE</div>
+      <div class="hero-visual" aria-hidden="true">
+        <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+        <span class="code-chip chip-a">要約</span><span class="code-chip chip-b">教材</span>
+        <span class="code-chip chip-c">改善</span><span class="code-chip chip-d">検証</span>
+        <div class="terminal-card"><b>&gt;_</b><span>CODEX</span><small>safe practice</small></div>
+      </div>
+      <h1>看護師のCodex活用力、<br><em>1分で見える。</em></h1>
+      <p class="lead">5つの質問に答えるだけ。今のレベルと、次に伸ばすポイントがすぐにわかります。</p>
+      <button class="primary ad-primary" type="button" data-action="choose-mode" data-mode="quick">無料で診断する <span>→</span></button>
+      <div class="trust-row"><span>5問</span><span>約1分</span><span>登録不要</span></div>
+      <button class="text-link" type="button" data-action="choose-mode" data-mode="full">詳しく診断したい方はこちら（約5分）</button>
+      <p class="fine-print">非公式の学習用診断です。OpenAIによる認定・資格ではありません。回答は端末内だけで処理されます。</p>
+    </div>
+  </template>
+
+  <template id="evidenceTemplate">
+    <div class="evidence-view">
+      <p class="section-label">安全に使うために</p>
+      <h2>AIの答えは、<br>人が確認する。</h2>
+      <section class="evidence-card">
+        <span class="evidence-source">METI / AI事業者ガイドライン</span>
+        <p>AI活用では、個人情報を守り、出力を人が確認し、最終判断を人が担うことが大切です。</p>
+        <a href="https://www.meti.go.jp/shingikai/mono_info_service/ai_shakai_jisso/20260331_report.html" target="_blank" rel="noopener noreferrer">出典を確認 ↗</a>
+      </section>
+      <section class="evidence-takeaway">
+        <strong>この診断で見ること</strong>
+        <p>経験だけでなく、情報管理と確認方法も含めて診断します。</p>
+      </section>
+      <button class="primary" type="button" data-action="next">残り2問へ <span>→</span></button>
+    </div>
+  </template>
+
+  <template id="quickResultTemplate">
+    <div class="quick-result-view">
+      <p class="section-label">QUICK RESULT</p>
+      <div class="quick-score"><strong id="quickScore"></strong><span>/ 100</span></div>
+      <p class="result-kicker">あなたのAI導入準備度</p>
+      <h1 id="quickTitle"></h1>
+      <p class="result-summary" id="quickSummary"></p>
+      <section class="next-card quick-next-card">
+        <span>最優先の改善テーマ</span>
+        <h2 id="quickAction"></h2>
+        <p id="quickDetail"></p>
+      </section>
+      <div class="quick-cta">
+        <button class="primary" type="button" data-action="start-full">詳しい診断で7日間プランを作る <span>→</span></button>
+        <button class="text-link" type="button" data-action="print">結果をPDF保存</button>
+        <button class="text-link" type="button" data-action="restart">もう一度診断する</button>
+      </div>
+      <p class="fine-print">結果をAIコンサルティング相談時に共有すると、現状確認を短縮できます。自己評価であり、成果・収益・適合性を保証するものではありません。臨床判断、患者情報の入力判断、所属施設の規定に代わるものではありません。</p>
+    </div>
+  </template>
+
+  <template id="questionTemplate">
+    <div class="question-view">
+      <p class="section-label" id="sectionLabel"></p>
+      <h2 id="questionTitle"></h2>
+      <p class="question-note" id="questionNote"></p>
+      <div class="answer-list" id="answerList"></div>
+    </div>
+  </template>
+
+  <template id="storyTemplate">
+    <div class="story-view">
+      <p class="section-label" id="storyLabel"></p>
+      <div class="story-visual" id="storyVisual" aria-hidden="true"></div>
+      <h2 id="storyTitle"></h2>
+      <p id="storyText"></p>
+      <button class="primary" type="button" data-action="next">続ける <span>→</span></button>
+    </div>
+  </template>
+
+  <template id="scaleTemplate">
+    <div class="scale-view">
+      <p class="section-label">SELF CHECK</p>
+      <h2>この内容はどのくらい<br>当てはまりますか？</h2>
+      <blockquote id="scaleStatement"></blockquote>
+      <div class="scale-options" id="scaleOptions" role="radiogroup" aria-label="当てはまる度合い"></div>
+      <div class="scale-caption"><span>違う</span><span>その通り</span></div>
+    </div>
+  </template>
+
+  <template id="multiTemplate">
+    <div class="question-view multi-view">
+      <p class="section-label" id="multiLabel"></p>
+      <h2 id="multiTitle"></h2>
+      <p class="question-note">当てはまるものをすべて選択してください</p>
+      <div class="answer-list" id="multiList"></div>
+      <div class="sticky-action"><button class="primary" id="multiNext" type="button" disabled>続ける <span>→</span></button></div>
+    </div>
+  </template>
+
+  <template id="profileTemplate">
+    <div class="profile-view">
+      <p class="section-label">MIDPOINT PROFILE</p>
+      <h2>あなたのCodex活用<br><em>現在地プロフィール</em></h2>
+      <div class="potential-card">
+        <span>ここまでの実践スコア</span>
+        <img class="mentor-portrait" src="assets/japanese-ai-mentor.png" width="1145" height="1374" alt="スクラブ姿の人物イメージ">
+        <small class="image-disclosure">AI生成イメージ・実在の人物や監修者ではありません</small>
+        <strong id="profileScore"></strong>
+        <div class="potential-meter"><i id="profileMeter"></i><b id="profilePin"></b></div>
+        <div class="meter-labels"><small>これから</small><small>基礎</small><small>実践</small><small>発展</small></div>
+        <p id="profileMessage"></p>
+      </div>
+      <div class="profile-facts" id="profileFacts"></div>
+      <p class="profile-note">これは回答途中の自己評価です。能力・年収・資格を証明するものではありません。</p>
+      <button class="primary" type="button" data-action="next">診断を続ける <span>→</span></button>
+    </div>
+  </template>
+
+  <template id="valueTemplate">
+    <div class="value-view">
+      <p class="section-label">VALUE GROWTH</p>
+      <div class="value-chart" role="img" aria-label="単発作業と再利用できる成果物の積み上がりを比較した概念図">
+        <svg viewBox="0 0 460 260" aria-hidden="true">
+          <defs><linearGradient id="areaNavy" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#56769a" stop-opacity=".28"/><stop offset="1" stop-color="#56769a" stop-opacity="0"/></linearGradient></defs>
+          <path class="axis" d="M34 18V226H438"/>
+          <path class="grid" d="M34 74H438M34 146H438"/>
+          <path class="area" d="M42 214 C126 210 172 190 220 154 S312 76 422 38 L422 226 L42 226Z"/>
+          <path class="growth-line" d="M42 214 C126 210 172 190 220 154 S312 76 422 38"/>
+          <path class="flat-line" d="M42 214 C142 212 230 202 422 176"/>
+          <circle class="growth-dot" cx="422" cy="38" r="8"/><circle class="flat-dot" cx="422" cy="176" r="7"/>
+        </svg>
+        <span class="chart-label growth-label">再利用できる成果物</span>
+        <span class="chart-label flat-label">単発作業のまま</span>
+        <div class="chart-time"><span>今日</span><span>1か月</span><span>2か月</span><span>3か月</span></div>
+      </div>
+      <h2>積み上げるほど、<br>仕事の選択肢が増えます。</h2>
+      <p class="value-copy">テンプレート、確認手順、教材などを再利用できる形で残すと、次の仕事をゼロから始めずに済みます。</p>
+      <p class="value-note">概念図です。収入・昇進・成果を保証するものではありません。</p>
+      <button class="primary" type="button" data-action="next">続ける <span>→</span></button>
+    </div>
+  </template>
+
+  <template id="comparisonTemplate">
+    <div class="comparison-view">
+      <p class="section-label">YOUR TRANSITION</p>
+      <h2>Codexを「使う」から、<br><em>仕事を完成させる</em>へ。</h2>
+      <div class="comparison-grid">
+        <section class="comparison-card current"><img src="assets/japanese-ai-mentor.png" width="1145" height="1374" alt="現在の状態を表すスクラブ姿の人物イメージ"><h3>現在</h3><ul><li>その都度、指示を考える</li><li>作成と完了が曖昧</li><li>確認方法が一定でない</li></ul></section>
+        <section class="comparison-card future"><img src="assets/japanese-ai-mentor.png" width="1145" height="1374" alt="これからの状態を表すスクラブ姿の人物イメージ"><h3>これから</h3><ul><li>依頼の型を再利用</li><li>完成条件が明確</li><li>根拠と表示を検証</li></ul></section>
+      </div>
+      <p class="image-disclosure">人物はAI生成イメージです。実在の人物や監修者ではありません。</p>
+      <p class="value-note">この変化は、診断後に小さな実践を続けた場合の学習目標です。</p>
+      <button class="primary" type="button" data-action="next">診断を続ける <span>→</span></button>
+    </div>
+  </template>
+
+  <template id="resultTemplate">
+    <div class="result-view result-deck">
+      <section class="result-slide" data-result-slide="0">
+        <p class="section-label">YOUR RESULT</p>
+        <div class="result-badge" id="resultBadge"><span>LEVEL</span><strong id="resultLevel"></strong></div>
+        <p class="result-kicker">あなたのCodex活用タイプ</p>
+        <h1 id="resultTitle"></h1>
+        <p class="result-summary" id="resultSummary"></p>
+        <div class="score-card"><div><span>総合スコア</span><strong id="resultScore"></strong></div><div class="score-track"><span id="scoreBar"></span></div></div>
+        <button class="primary slide-next" type="button" data-action="result-next">能力分析を見る <span>→</span></button>
+      </section>
+      <section class="result-slide" data-result-slide="1" hidden>
+        <p class="section-label">SKILL PROFILE</p>
+        <h1>4つの力を<br>分析しました。</h1>
+        <div class="strength-grid strength-grid-large" id="strengthGrid"></div>
+        <button class="primary slide-next" type="button" data-action="result-next">次の一歩を見る <span>→</span></button>
+      </section>
+      <section class="result-slide" data-result-slide="2" hidden>
+        <p class="section-label">YOUR NEXT STEP</p>
+        <h1>まずは、これを<br>完成させましょう。</h1>
+        <section class="next-card"><span>次の一歩</span><h2 id="nextAction"></h2><p id="nextDetail"></p></section>
+        <section class="offer-card"><p class="section-label">FREE 7-DAY PRACTICE</p><h2>1日15分、7日間の実践プランを用意しました。</h2><p>登録なしで、そのまま確認できます。</p></section>
+        <button class="primary slide-next" type="button" data-action="show-plan">DAY 1から始める <span>→</span></button>
+      </section>
+      <div id="planSlides"></div>
+      <section class="result-slide" data-result-slide="10" hidden>
+        <p class="section-label">PLAN COMPLETE</p>
+        <h1>7日後の<br>完成目標</h1>
+        <div class="plan-goal-card"><span>完成させるもの</span><p id="planGoal"></p></div>
+        <div class="certificate"><p>SELF-ASSESSMENT LEARNING RECORD</p><h3>Codex活用スキルチェック 学習記録</h3><strong id="certificateType"></strong><small id="certificateDate"></small><small>資格・認定証ではありません。OpenAI非公式・非提携の自己評価結果です。</small></div>
+        <button class="primary" type="button" data-action="restart">もう一度診断する</button>
+        <button class="secondary" type="button" data-action="print">結果を保存・印刷</button>
+        <p class="fine-print">OpenAI非公式・非提携の学習用自己評価です。資格・認定証、臨床判断、所属施設の規定に代わるものではありません。</p>
+      </section>
+    </div>
+  </template>
+
+  <template id="setupTemplate">
+    <div class="setup-view">
+      <p class="section-label">PERSONALIZING</p>
+      <h2>あなた専用の<br><em>Codex実践プラン</em>を<br>準備しています…</h2>
+      <div class="setup-list" aria-label="プラン作成の進捗">
+        <div class="setup-row done"><div><span>回答内容を整理しています</span><b>完了</b></div><i></i></div>
+        <div class="setup-row done"><div><span>安全・検証レベルを反映中</span><b>完了</b></div><i></i></div>
+        <div class="setup-row running"><div><span>最初の実践課題を選んでいます</span><b>分析中</b></div><i></i></div>
+        <div class="setup-row waiting"><div><span>7日間プランを組み立てています</span><b>待機</b></div><i></i></div>
+      </div>
+      <section class="setup-preview">
+        <span>回答から反映する内容</span>
+        <div id="setupTags"></div>
+        <p>入力された回答は外部へ送信されません。この端末上で診断結果と実践プランを作成します。</p>
+      </section>
+      <button class="secondary setup-skip" type="button" data-action="show-result">結果を見る</button>
+    </div>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
